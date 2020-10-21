@@ -2,6 +2,7 @@ import http.client
 import argparse
 import json
 import os
+import re
 import sys
 import time
 
@@ -19,6 +20,12 @@ def parse():
     parser.add_argument(
         '--output_dir',
         required=True,
+        type=str
+    )
+    parser.add_argument(
+        '--template',
+        required=False,
+        default='\\.txt$',
         type=str
     )
     return vars(parser.parse_args(sys.argv[1:]))
@@ -78,8 +85,7 @@ def translate(input_filename, output_filename):
             ouf.write(f'{label} {line}')
 
 
-def run(input_dir, output_dir):
-
+def run(input_dir, output_dir, template):
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
     for p, d, f in os.walk(input_dir):
@@ -88,7 +94,7 @@ def run(input_dir, output_dir):
         if not os.path.exists(output_dirpath):
             os.mkdir(output_dirpath)
         for filename in f:
-            if os.path.splitext(filename)[1] == '.txt':
+            if re.search(template, filename) is not None:
                 input_filename = os.path.join(p, filename)
                 output_filename = os.path.join(output_dirpath, filename)
                 if not os.path.exists(output_filename):
