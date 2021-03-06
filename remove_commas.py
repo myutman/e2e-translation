@@ -27,8 +27,12 @@ def remove_commas(input_filename, output_filename):
     with open(input_filename) as inf:
         with open(output_filename, 'w') as ouf:
             for line in inf.readlines():
-                out_line = re.sub("[.,]", "", line)
+                out_line = remove_commas_line(line)
                 ouf.write(out_line)
+
+
+def remove_commas_line(line: str):
+    return re.sub("[.,]", "", line)
 
 
 def run(input_dir, output_dir):
